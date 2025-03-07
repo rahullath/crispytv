@@ -1,7 +1,7 @@
-const APP_NAME = "OurTube";
-const APP_DESCRIPTION = "A decentralized video sharing platform";
+const APP_NAME = "Torvy";
+const APP_DESCRIPTION = "A decentralized streaming platform";
 const APP_VERSION = "0.0.1";
-const CONTRACT_ADDRESS = "0x78F35c1F417C9343854b16Af9d7aeB1A2Aa61669";
+const CONTRACT_ADDRESS = "0xBD99011fb1B7B0688E3AC9873cC0B7aeBA889c9f";
 const IPFS_GATEWAY = "https://gateway.lighthouse.storage/ipfs/";
 const LIVEPEER_KEY = process.env.NEXT_PUBLIC_LIVEPEER_KEY;
 

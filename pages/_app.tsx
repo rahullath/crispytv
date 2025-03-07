@@ -12,29 +12,24 @@ import { ThemeProvider } from "../utils";
 import { Toaster } from "react-hot-toast";
 import { LivepeerClient } from "../clients";
 
-const HyperspaceTestnet = {
-  /** ID in number form */
-  id: 3141,
-  /** Human-readable name */
-  name: "Filecoin - Hyperspace testnet",
-  /** Internal network name */
+const FilecoinCalibrationTestnet = {
+  id: 314159,
+  name: "Filecoin - Calibration testnet",
   network: "filecoin",
-  /** Currency used by chain */
-  nativeCurrency: { name: "testnet filecoin", symbol: "tFIL", decimals: 18 },
-  /** Collection of RPC endpoints */
+  nativeCurrency: { name: "Calibration Filecoin", symbol: "tFIL", decimals: 18 },
   rpcUrls: {
-    public: "https://rpc.ankr.com/filecoin_testnet",
+    public: "https://api.calibration.node.glif.io/rpc/v1",
   },
   testnet: true,
 };
 
 const { chains, provider } = configureChains(
   //@ts-ignore
-  [HyperspaceTestnet],
+  [FilecoinCalibrationTestnet ],
   [
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: `https://rpc.ankr.com/filecoin_testnet`,
+        http: `https://api.calibration.node.glif.io/rpc/v1`,
       }),
     }),
   ]

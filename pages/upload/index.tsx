@@ -184,7 +184,7 @@ export default function Upload() {
             </div>
 
             <UploadInput
-              isAudio={false}
+             // isAudio={false}
               setVideo={(video) => {
                 uploadToLighthouse(video, "video");
               }}

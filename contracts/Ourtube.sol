@@ -8,7 +8,7 @@ contract Ourtube {
     // State variable
     uint256 public videoCount = 0;
     // Contract owner
-    string public name = "Ourtube Contract";
+    string public name = "Torvy Contract";
     mapping(uint256 => Video) public videos;
 
     struct Video {
@@ -38,7 +38,7 @@ contract Ourtube {
     );
 
     constructor() {
-        console.log("Deploying OutTube");
+        console.log("Deploying Torvy");
     }
 
     function uploadVideo(
