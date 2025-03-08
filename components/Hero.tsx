@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 
 interface HeroProps {
   title: string;
@@ -10,6 +11,12 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ title, description, thumbnailUrl, videoUrl }) => {
+  const router = useRouter();
+
+  const handlePlayClick = () => {
+    router.push('/watch/1'); // Navigate to the watch page for the featured video
+  };
+
   return (
     <div className="relative h-[80vh] w-full overflow-hidden">
       {/* Background Image with Gradient Overlay */}
@@ -17,9 +24,10 @@ const Hero: React.FC<HeroProps> = ({ title, description, thumbnailUrl, videoUrl 
         <Image
           src={thumbnailUrl}
           alt={title}
-          layout="fill"
-          objectFit="cover"
-          className="transform scale-105"
+          width={1920}
+          height={1080}
+          className="transform scale-105 object-cover"
+          priority
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
       </div>
@@ -39,8 +47,11 @@ const Hero: React.FC<HeroProps> = ({ title, description, thumbnailUrl, videoUrl 
             {description}
           </p>
           <div className="flex gap-4">
-            <button className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition-all">
-              Play Now
+            <button 
+              onClick={handlePlayClick}
+              className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition-all flex items-center"
+            >
+              <span className="mr-2">▶</span> Play Now
             </button>
             <button className="bg-gray-800 bg-opacity-50 text-white px-8 py-3 rounded-full font-semibold hover:bg-opacity-70 transition-all">
               More Info

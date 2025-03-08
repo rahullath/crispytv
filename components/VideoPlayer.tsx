@@ -1,6 +1,4 @@
 import React from 'react';
-import { Player } from '@livepeer/react';
-import { motion } from 'framer-motion';
 
 interface VideoPlayerProps {
   playbackId: string;
@@ -16,32 +14,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   thumbnailUrl,
 }) => {
   return (
-    <div className="w-full bg-black">
+    <div className="w-full bg-black relative">
       {/* Video Player */}
       <div className="relative aspect-video w-full">
-        <Player
-          playbackId={playbackId}
-          autoPlay
-          loop
-          showPipButton
-          objectFit="cover"
-          poster={thumbnailUrl}
+        <iframe
           className="w-full h-full"
+          src={`https://lvpr.tv/?v=${playbackId}`}
+          allowFullScreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         />
       </div>
 
       {/* Video Info */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="p-6 max-w-4xl mx-auto"
-      >
-        <h1 className="text-3xl font-bold text-white mb-4">{title}</h1>
-        {description && (
-          <p className="text-gray-300 mb-6">{description}</p>
-        )}
-        
-        {/* Video Controls */}
+      <div className="p-6 max-w-4xl mx-auto">
         <div className="flex items-center space-x-4">
           <button className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-opacity-90 transition-all">
             Add to List
@@ -50,7 +35,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             Share
           </button>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,44 @@
-import { create } from 'livepeer';
 import { ethers } from 'ethers';
 
-// Initialize Livepeer client
-const livepeer = create({
-  apiKey: process.env.NEXT_PUBLIC_LIVEPEER_API_KEY || '',
-});
+// Initialize Livepeer client with mock implementation for development
+const livepeer = {
+  // Mock implementation for development
+  createAsset: async (options: any) => ({
+    id: `mock-${Date.now()}`,
+    playbackId: `mock-playback-${Date.now()}`,
+    status: 'ready',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    duration: 0,
+    name: options.name,
+    input: {
+      url: options.input,
+    },
+    output: {
+      url: `https://mock-cdn.com/${options.input}`,
+      playbackUrl: `https://mock-cdn.com/${options.input}/manifest.m3u8`,
+    },
+  }),
+  getAsset: async (id: string) => ({
+    id,
+    playbackId: `mock-playback-${Date.now()}`,
+    status: 'ready',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    duration: 0,
+    name: 'Mock Video',
+    input: {
+      url: 'https://mock-cdn.com/video.mp4',
+    },
+    output: {
+      url: 'https://mock-cdn.com/video.mp4',
+      playbackUrl: 'https://mock-cdn.com/video/manifest.m3u8',
+    },
+  }),
+  deleteAsset: async (id: string) => {
+    console.log('Deleting asset:', id);
+  },
+};
 
 export interface VideoProcessingOptions {
   name: string;
@@ -33,12 +67,15 @@ export interface VideoAsset {
 
 export class LivepeerService {
   private static instance: LivepeerService;
-  private provider: ethers.providers.Web3Provider;
+  private provider?: ethers.providers.Web3Provider;
 
   private constructor() {
-    // Initialize Web3 provider
-    if (typeof window !== 'undefined' && window.ethereum) {
-      this.provider = new ethers.providers.Web3Provider(window.ethereum);
+    // Initialize Web3 provider only on client side
+    if (typeof window !== 'undefined') {
+      const ethereum = (window as any).ethereum;
+      if (ethereum) {
+        this.provider = new ethers.providers.Web3Provider(ethereum);
+      }
     }
   }
 
@@ -51,13 +88,7 @@ export class LivepeerService {
 
   async createVideoAsset(options: VideoProcessingOptions): Promise<VideoAsset> {
     try {
-      const asset = await livepeer.asset.create({
-        name: options.name,
-        input: options.input,
-        storage: options.storage,
-      });
-
-      return asset;
+      return await livepeer.createAsset(options);
     } catch (error) {
       console.error('Error creating video asset:', error);
       throw error;
@@ -66,8 +97,7 @@ export class LivepeerService {
 
   async getVideoAsset(assetId: string): Promise<VideoAsset> {
     try {
-      const asset = await livepeer.asset.get(assetId);
-      return asset;
+      return await livepeer.getAsset(assetId);
     } catch (error) {
       console.error('Error getting video asset:', error);
       throw error;
@@ -76,7 +106,7 @@ export class LivepeerService {
 
   async deleteVideoAsset(assetId: string): Promise<void> {
     try {
-      await livepeer.asset.delete(assetId);
+      await livepeer.deleteAsset(assetId);
     } catch (error) {
       console.error('Error deleting video asset:', error);
       throw error;
@@ -88,26 +118,31 @@ export class LivepeerService {
   }
 
   async processTorrentToVideo(ipfsHash: string, name: string): Promise<VideoAsset> {
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Return mock video asset
-    return {
-      id: `mock-${Date.now()}`,
-      playbackId: `mock-playback-${Date.now()}`,
-      status: 'ready',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      duration: 0,
-      name,
-      input: {
-        url: `ipfs://${ipfsHash}`,
-      },
-      output: {
-        url: `https://mock-cdn.com/${ipfsHash}`,
-        playbackUrl: `https://mock-cdn.com/${ipfsHash}/manifest.m3u8`,
-      },
-    };
+      // Return mock video asset
+      return {
+        id: `mock-${Date.now()}`,
+        playbackId: `mock-playback-${Date.now()}`,
+        status: 'ready',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        duration: 0,
+        name,
+        input: {
+          url: `ipfs://${ipfsHash}`,
+        },
+        output: {
+          url: `https://mock-cdn.com/${ipfsHash}`,
+          playbackUrl: `https://mock-cdn.com/${ipfsHash}/manifest.m3u8`,
+        },
+      };
+    } catch (error) {
+      console.error('Error processing torrent to video:', error);
+      throw error;
+    }
   }
 
   async checkProcessingStatus(assetId: string): Promise<string> {

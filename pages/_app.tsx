@@ -1,52 +1,57 @@
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-import { LivepeerConfig } from "@livepeer/react";
-import {
-  getDefaultWallets,
-  RainbowKitProvider,
-  darkTheme,
-} from "@rainbow-me/rainbowkit";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { getDefaultWallets, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import { configureChains, createClient, WagmiConfig, Chain } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import type { AppProps } from "next/app";
 import { ThemeProvider } from "../utils";
 import { Toaster } from "react-hot-toast";
-import { LivepeerClient } from "../clients";
 
-const FilecoinCalibrationTestnet = {
-  id: 314159,
-  name: "Filecoin - Calibration testnet",
-  network: "filecoin",
-  nativeCurrency: { name: "Calibration Filecoin", symbol: "tFIL", decimals: 18 },
+const polygonAmoy: Chain = {
+  id: 80002,
+  name: 'Polygon Amoy',
+  network: 'polygon-amoy',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'MATIC',
+    symbol: 'MATIC',
+  },
   rpcUrls: {
-    public: "https://api.calibration.node.glif.io/rpc/v1",
+    public: { http: ['https://rpc-amoy.polygon.technology'] },
+    default: { http: ['https://rpc-amoy.polygon.technology'] },
+  },
+  blockExplorers: {
+    default: { name: 'OKLink', url: 'https://www.oklink.com/amoy' },
   },
   testnet: true,
 };
 
 const { chains, provider } = configureChains(
-  //@ts-ignore
-  [FilecoinCalibrationTestnet ],
+  [polygonAmoy],
   [
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: `https://api.calibration.node.glif.io/rpc/v1`,
+        http: chain.rpcUrls.default.http[0],
       }),
     }),
   ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Ourtube",
-  chains,
+  appName: "FMedia",
+  projectId: "5b337c13c2deca1e498e40157176ebbe",
+  chains
 });
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  provider,
+  provider
 });
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
@@ -57,10 +62,8 @@ function MyApp({ Component, pageProps }) {
         chains={chains}
       >
         <ThemeProvider>
-          <LivepeerConfig client={LivepeerClient}>
-            <Component {...pageProps} />
-            <Toaster />
-          </LivepeerConfig>
+          <Component {...pageProps} />
+          <Toaster />
         </ThemeProvider>
       </RainbowKitProvider>
     </WagmiConfig>
