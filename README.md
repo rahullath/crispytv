@@ -8,6 +8,9 @@
 
 <br />
 
+![image](https://github.com/user-attachments/assets/58aaa663-bda4-44b7-ac32-05b7852d5399)
+
+
 ## About The Project
 
 CrispyTV is a next-generation streaming platform that combines the power of decentralized video infrastructure with traditional streaming capabilities. Built on the Filecoin Virtual Machine (FVM) and Livepeer, it offers:
