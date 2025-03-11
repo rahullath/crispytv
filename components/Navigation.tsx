@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const Navigation: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +33,26 @@ const Navigation: React.FC = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
+            <Link
+              href="/"
+              className={`text-gray-300 hover:text-white transition-colors ${
+                router.pathname === '/'
+                  ? 'bg-gray-800 text-white'
+                  : ''
+              }`}
+            >
+              Home
+            </Link>
+            <Link
+              href="/upload"
+              className={`text-gray-300 hover:text-white transition-colors ${
+                router.pathname === '/upload'
+                  ? 'bg-gray-800 text-white'
+                  : ''
+              }`}
+            >
+              Upload Torrent
+            </Link>
             <Link href="/browse" className="text-gray-300 hover:text-white transition-colors">
               Browse
             </Link>

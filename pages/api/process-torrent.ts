@@ -24,4 +24,4 @@ export default async function handler(
     console.error('Error processing torrent:', error);
     return res.status(500).json({ error: 'Failed to process torrent' });
   }
-} 
+}

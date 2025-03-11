@@ -1,19 +1,30 @@
 import React from "react";
-import { useAsset, Player } from "@livepeer/react";
+import Plyr from 'plyr-react';
+import 'plyr-react/plyr.css';
 
 interface PlayerProps {
-  id: any;
+  id: string;
 }
 
 const VideoPlayer: React.FC<PlayerProps> = ({ id }) => {
+  // Construct the IPFS playback URL
+  const ipfsUrl = `https://gateway.ipfs.io/ipfs/${id}`;
+  
   return (
-    <Player
-      src={"ipfs://" + id}
-      showPipButton
-      showTitle={false}
-      aspectRatio="16to9"
-      controls={{
-        autohide: 3000,
+    <Plyr
+      source={{
+        type: 'video',
+        sources: [
+          {
+            src: ipfsUrl,
+            type: 'video/mp4',
+          },
+        ],
+      }}
+      options={{
+        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
+        autoplay: false,
+        ratio: '16:9',
       }}
     />
   );
